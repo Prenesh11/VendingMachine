@@ -57,8 +57,12 @@ public class VendingMachineController {
         return cashFlowService.updateCashFlow(cashFlow);
     }
 
-
-
+    public void updateAddToCashFlow(List<CashFlow> cashFlowList){
+           cashFlowService.updateAddToCashFlow(cashFlowList);
+    }
+    public void updateSubtractFromCashFlow(List<CashFlow> cashFlowList){
+        cashFlowService.updateSubtractFromCashFlow(cashFlowList);
+    }
 
 
     @RequestMapping(value = "purchaseItem", method = RequestMethod.POST)
@@ -72,11 +76,12 @@ public class VendingMachineController {
             desiredProduct.setQuantity(desiredProduct.getQuantity()-1);
             updateProduct(desiredProduct);
 
-            purchaseResponse.setPurchaseStatus("Successful");
+            updateAddToCashFlow(purchaseRequest.getAmountList());
             purchaseResponse.setChange(purchaseRequest.getTotal() - desiredProduct.getCost());
-//            purchaseResponse.setPurchaseChangeBreakdown(calculateBreakDown(purchaseResponse.getChange()));
+            purchaseResponse.setPurchaseChangeBreakdown(calculateBreakDown(purchaseResponse.getChange()));
+            updateSubtractFromCashFlow(purchaseResponse.getPurchaseChangeBreakdown());
 
-
+            purchaseResponse.setPurchaseStatus("Successful");
 
         }
         else
@@ -88,32 +93,35 @@ public class VendingMachineController {
         return purchaseResponse;
     }
 
-    @RequestMapping(value = "calculateChange", method = RequestMethod.GET)
-    private List<CashFlow> calculateBreakDown() {
+//    @RequestMapping(value = "calculateChange", method = RequestMethod.GET)
+    private List<CashFlow> calculateBreakDown(int change) {
 
-        int change =55;
-
-        List<CashFlow> currentCashFlow = retrieveCashFlow();
         List<CashFlow> purchaseChangeBreakdown = new ArrayList<>();
 
-        CashFlow fiveRand = new CashFlow();
-        fiveRand.setAmount(0);
-        fiveRand.setDescription("Five rand coin");
-        fiveRand.setDenomination(DenominationEnum.FIVE_RAND.getRandValue());
-        purchaseChangeBreakdown.add(fiveRand);
-
-        CashFlow tenRand = new CashFlow();
-        tenRand.setAmount(0);
-        tenRand.setDescription("Ten rand note");
-        tenRand.setDenomination(DenominationEnum.TEN_RAND.getRandValue());
-        purchaseChangeBreakdown.add(tenRand);
+        CashFlow twentyRandDbRecord = cashFlowService.findByDenomination(DenominationEnum.TWENTY_RAND.getRandValue());
+        CashFlow tenRandDbRecord = cashFlowService.findByDenomination(DenominationEnum.TEN_RAND.getRandValue());
+        CashFlow fiveRandDbRecord = cashFlowService.findByDenomination(DenominationEnum.FIVE_RAND.getRandValue());
 
         CashFlow twentyRand = new CashFlow();
+        twentyRand.setId(twentyRandDbRecord.getId());
         twentyRand.setAmount(0);
-        twentyRand.setDescription("Twenty rand note");
+        twentyRand.setDescription(twentyRandDbRecord.getDescription());
         twentyRand.setDenomination(DenominationEnum.TWENTY_RAND.getRandValue());
         purchaseChangeBreakdown.add(twentyRand);
 
+        CashFlow tenRand = new CashFlow();
+        tenRand.setId(tenRandDbRecord.getId());
+        tenRand.setAmount(0);
+        tenRand.setDescription(tenRandDbRecord.getDescription());
+        tenRand.setDenomination(DenominationEnum.TEN_RAND.getRandValue());
+        purchaseChangeBreakdown.add(tenRand);
+
+        CashFlow fiveRand = new CashFlow();
+        fiveRand.setId(fiveRandDbRecord.getId());
+        fiveRand.setAmount(0);
+        fiveRand.setDescription(fiveRandDbRecord.getDescription());
+        fiveRand.setDenomination(DenominationEnum.FIVE_RAND.getRandValue());
+        purchaseChangeBreakdown.add(fiveRand);
 
         while(change >= DenominationEnum.TWENTY_RAND.getRandValue())
         {

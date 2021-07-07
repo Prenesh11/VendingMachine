@@ -72,4 +72,29 @@ public class CashFlowService {
         return cashFlowRepository.findAll();
     }
 
+    public CashFlow findByDenomination(int value){
+        return cashFlowRepository.findByDenomination(value);
+    }
+
+    public void updateAddToCashFlow(List<CashFlow> cashFlowList) {
+
+        for (CashFlow valueUpdated : cashFlowList)
+        {
+            CashFlow cashFlowToBeUpdated = cashFlowRepository.findByDenomination(valueUpdated.getDenomination());
+            cashFlowToBeUpdated.setAmount(cashFlowToBeUpdated.getAmount() + valueUpdated.getAmount());
+            cashFlowRepository.save(cashFlowToBeUpdated);
+        }
+    }
+
+    public void updateSubtractFromCashFlow(List<CashFlow> cashFlowList) {
+
+        for (CashFlow valueUpdated : cashFlowList)
+        {
+            CashFlow cashFlowToBeUpdated = cashFlowRepository.findByDenomination(valueUpdated.getDenomination());
+            cashFlowToBeUpdated.setAmount(cashFlowToBeUpdated.getAmount() - valueUpdated.getAmount());
+            cashFlowRepository.save(cashFlowToBeUpdated);
+        }
+    }
 }
+
+

@@ -29,9 +29,11 @@ public class PurchaseRequest {
 
     public int getTotal() {
 
+        total = 0;
+
         for (CashFlow amount: amountList)
         {
-            total = total += amount.getDenomination();
+            total = total += amount.getDenomination()*amount.getAmount();
         }
         return total;
     }

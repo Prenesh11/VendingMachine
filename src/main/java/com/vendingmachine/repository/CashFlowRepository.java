@@ -14,6 +14,9 @@ public interface CashFlowRepository extends JpaRepository<CashFlow, Integer> {
 
     public List<CashFlow> findByDescription(String name);
 
+    public CashFlow findByDenomination(int value);
+
+
     @Query("select max(s.id) from CashFlow s")
     public Integer findMaxId();
 }
