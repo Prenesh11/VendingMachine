@@ -4,6 +4,14 @@ package com.vendingmachine.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * PurchaseResponse object is responsible for holding purchase response structure
+ *
+ * @author  Prenesh Naidoo
+ * @version 1.0
+ * @since  2021
+ */
+
 public class PurchaseResponse {
 
 
@@ -34,4 +42,5 @@ public class PurchaseResponse {
     public void setPurchaseChangeBreakdown(List<CashFlow> purchaseChangeBreakdown) {
         this.purchaseChangeBreakdown = purchaseChangeBreakdown;
     }
+
 }

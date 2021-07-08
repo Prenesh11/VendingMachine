@@ -1,5 +1,6 @@
 package com.vendingmachine;
 
+import com.vendingmachine.entity.CashFlow;
 import com.vendingmachine.entity.Product;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +51,29 @@ class VendingmachineApplicationTests {
 		product.setProductName("Red Bull");
 
 		ResponseEntity<Product> postResponse = restTemplate.postForEntity(getRootUrl() + "/createProduct", HttpMethod.POST, Product.class);
+		assertNotNull(postResponse);
+		assertNotNull(postResponse.getBody());
+	}
+
+	@Test
+	public void testGetCashFlow() {
+		HttpHeaders headers = new HttpHeaders();
+		HttpEntity<String> entity = new HttpEntity<String>(null, headers);
+
+		ResponseEntity<String> response = restTemplate.exchange(getRootUrl() + "/retrieveAllProducts",
+				HttpMethod.GET, entity, String.class);
+
+		assertNotNull(response.getBody());
+	}
+
+	@Test
+	public void testAddCashFlow() {
+		CashFlow cashFlow = new CashFlow();
+		cashFlow.setAmount(15);
+		cashFlow.setDenomination(20);
+		cashFlow.setDescription("R20 note");
+
+		ResponseEntity<Product> postResponse = restTemplate.postForEntity(getRootUrl() + "/addCashFlow", HttpMethod.POST, Product.class);
 		assertNotNull(postResponse);
 		assertNotNull(postResponse.getBody());
 	}

@@ -9,6 +9,15 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.List;
 
+/**
+ * this class is responsible for performing most of the DB related queries for cash flow
+ *
+ * @author  Prenesh Naidoo
+ * @version 1.0
+ * @since  2021
+ */
+
+
 @Service
 public class CashFlowService {
 
@@ -84,6 +93,7 @@ public class CashFlowService {
             cashFlowToBeUpdated.setAmount(cashFlowToBeUpdated.getAmount() + valueUpdated.getAmount());
             cashFlowRepository.save(cashFlowToBeUpdated);
         }
+
     }
 
     public void updateSubtractFromCashFlow(List<CashFlow> cashFlowList) {

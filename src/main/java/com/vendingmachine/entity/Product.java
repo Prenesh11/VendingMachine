@@ -3,6 +3,14 @@ package com.vendingmachine.entity;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
+/**
+ * Product object mapped to the DB
+ *
+ * @author  Prenesh Naidoo
+ * @version 1.0
+ * @since  2021
+ */
+
 @Entity
 public class Product {
 

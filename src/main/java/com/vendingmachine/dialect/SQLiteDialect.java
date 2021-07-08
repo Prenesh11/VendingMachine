@@ -8,6 +8,14 @@ import org.hibernate.type.StringType;
 
 import java.sql.Types;
 
+/**
+ * SQLiteDialect is used to give us hibernate like features on SQLite and is referenced in the properties file
+ *
+ * @author  Prenesh Naidoo
+ * @version 1.0
+ * @since  2021
+ */
+
 public class SQLiteDialect extends Dialect {
 
     public SQLiteDialect() {

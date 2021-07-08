@@ -13,6 +13,16 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * VendingMachineController, this class is used as a central controller to expose all the service endpoint need
+ * for a customer products basic CRUD operation web service methods are exposed below.
+ *
+ * @author  Prenesh Naidoo
+ * @version 1.0
+ * @since  2021
+ */
+
+
 @RestController
 public class VendingMachineController {
 
@@ -23,11 +33,15 @@ public class VendingMachineController {
 
 
 
+    /******************************************************************************************************************
+     *																												 **
+     * -----------------------------------Product CRUD Operations----------------------------------------------------**
+     * 																												 **
+     ******************************************************************************************************************/
     @RequestMapping(value = "createProduct", method = RequestMethod.POST)
     public String createProduct(@RequestBody Product product){
         return inventoryService.addProduct(product);
     }
-
 
     @RequestMapping(value = "retrieveAllProducts", method = RequestMethod.GET)
     public List<Product> viewAllProducts(){
@@ -39,9 +53,11 @@ public class VendingMachineController {
         return inventoryService.updateInventory(product);
     }
 
-
-
-
+    /******************************************************************************************************************
+     *																												 **
+     * -----------------------------------Cash flow CRUD Operations--------------------------------------------------**
+     * 																												 **
+     ******************************************************************************************************************/
     @RequestMapping(value = "addCashFlow", method = RequestMethod.POST)
     public String createCashFlow(@RequestBody CashFlow cashFlow){
         return cashFlowService.addNewPettyCashDenomination(cashFlow);
@@ -64,7 +80,13 @@ public class VendingMachineController {
         cashFlowService.updateSubtractFromCashFlow(cashFlowList);
     }
 
-
+    /**
+     * The purchaseItem method is responsible for facilitating payments and dispensing products
+     *
+     *
+     * @param purchaseRequest
+     * @return purchaseResponse
+     */
     @RequestMapping(value = "purchaseItem", method = RequestMethod.POST)
     public PurchaseResponse purchaseItem(@RequestBody PurchaseRequest purchaseRequest){
 
@@ -78,9 +100,11 @@ public class VendingMachineController {
 
             updateAddToCashFlow(purchaseRequest.getAmountList());
             purchaseResponse.setChange(purchaseRequest.getTotal() - desiredProduct.getCost());
-            purchaseResponse.setPurchaseChangeBreakdown(calculateBreakDown(purchaseResponse.getChange()));
-            updateSubtractFromCashFlow(purchaseResponse.getPurchaseChangeBreakdown());
-
+            if(purchaseResponse.getChange()>0)
+            {
+                purchaseResponse.setPurchaseChangeBreakdown(calculateBreakDown(purchaseResponse.getChange()));
+                updateSubtractFromCashFlow(purchaseResponse.getPurchaseChangeBreakdown());
+            }
             purchaseResponse.setPurchaseStatus("Successful");
 
         }
@@ -93,7 +117,14 @@ public class VendingMachineController {
         return purchaseResponse;
     }
 
-//    @RequestMapping(value = "calculateChange", method = RequestMethod.GET)
+    /**
+     * The calculateBreakDown method is responsible for calculating change and breaking down which notes should
+     * be dispensed.
+     *
+     *
+     * @param change
+     * @return purchaseChangeBreakdown
+     */
     private List<CashFlow> calculateBreakDown(int change) {
 
         List<CashFlow> purchaseChangeBreakdown = new ArrayList<>();
@@ -154,6 +185,12 @@ public class VendingMachineController {
     }
 
 
+
+    /******************************************************************************************************************
+     *																												 **
+     * -----------------------------------Populate DB Tables Operation-----------------------------------------------**
+     * 																												 **
+     ******************************************************************************************************************/
     @RequestMapping(value = "populateProductTable", method = RequestMethod.GET)
     public String populateProductTables()
     {
